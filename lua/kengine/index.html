@@ -1,0 +1,52 @@
+<?lua require "clock" ?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Lua test</title>
+	</head>
+	<body>
+		Lua test:
+		<?lua
+			foo = 5
+			if foo == 5 then
+				print("Hello, world! Foo is 5.")
+			else
+				print("Hi. Actually, foo is not 5.")
+			end
+		?>
+		
+		<br><br>
+
+		Another test:
+		<?lua
+			if foo == 5 then
+				print("Foo is still 5. :)")
+			else
+				print("Foo is no longer 5. :(")
+			end
+		?>
+
+		<br><br>
+
+		Speed test (format string a lot of times)...
+		<?lua
+			for i=1,10000 do
+				string.format("Value of i: %d<br>", i)
+			end
+		?>
+
+		<br><br>
+
+		A loop that spans multiple Lua blocks:
+		<?lua for i = 1, 3, 1 do ?>Hello <?lua end ?>
+		
+		<br><br>
+
+		Finally, setting status code to something other than 200.
+		<?lua response.status(400) ?>
+
+		<br><hr>
+
+		<?lua print(string.format("Rendered in %.3fms", (os.clock() - start) * 1000)) ?>
+	</body>
+</html>
