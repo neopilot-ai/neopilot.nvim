@@ -1,5 +1,0 @@
-<?lua
-println("Hello world!")
-
-include "no/such/file"
-?>
