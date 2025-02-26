@@ -1,17 +1,29 @@
 
 local local_plugins = {
     {
-        "rfceez",
-        dir = "~/personal/rfceez",
+        "cockpit",
+        dir = "~/personal/cockpit",
         config = function()
-            local rfc = require("rfceez")
-            rfc.setup()
-            vim.keymap.set("n", "<leader>ra", function() rfc.add() end)
-            vim.keymap.set("n", "<leader>rd", function() rfc.rm() end)
-            vim.keymap.set("n", "<leader>rs", function() rfc.show_notes() end)
-            vim.keymap.set("n", "[r", function() rfc.nav_next() end)
-            vim.keymap.set("n", "[[r", function() rfc.show_next() end)
-        end
+            require("cockpit")
+            vim.keymap.set("n", "<leader>ct", "<cmd>CockpitTest<CR>")
+            vim.keymap.set("n", "<leader>cr", "<cmd>CockpitRefresh<CR>")
+        end,
+    },
+
+    {
+        "streamer",
+        dir = "~/personal/eleven-streamer",
+        dependencies = {
+            "livinglogic-nl/ws.nvim"
+        },
+        config = function() end
+    },
+
+
+    {
+        "caleb",
+        dir = "~/personal/caleb",
+        config = function() end
     },
     {
         "harpoon",
