@@ -1,31 +1,54 @@
-vim.opt.guicursor = ""
+-- UI and cursor settings
+vim.opt.guicursor = ""  -- Use block cursor everywhere
 
-vim.opt.nu = true
-vim.opt.relativenumber = true
+-- Line numbers
+vim.opt.nu = true               -- Show absolute line numbers
+vim.opt.relativenumber = true   -- Show relative line numbers
 
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
+-- Tabs and indentation
+vim.opt.tabstop = 4             -- Number of spaces a <Tab> counts for
+vim.opt.softtabstop = 4         -- Number of spaces for editing operations
+vim.opt.shiftwidth = 4          -- Number of spaces for autoindent
+vim.opt.expandtab = true        -- Use spaces instead of tabs
 
-vim.opt.smartindent = true
+vim.opt.smartindent = true      -- Do smart autoindenting
 
-vim.opt.wrap = false
+-- Line wrapping
+vim.opt.wrap = false            -- Do not wrap long lines
 
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-vim.opt.undofile = true
+-- Swap and backup
+vim.opt.swapfile = false        -- Do not use swap files
+vim.opt.backup = false          -- Do not create backup files
 
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
+-- Undo directory (only set if $HOME is defined)
+local home = os.getenv("HOME")
+if home then
+    vim.opt.undodir = home .. "/.vim/undodir"
+end
+vim.opt.undofile = true         -- Persistent undo
 
-vim.opt.termguicolors = true
+-- Search
+vim.opt.hlsearch = false        -- Do not highlight all search matches by default
+vim.opt.incsearch = true        -- Show search matches as you type
 
-vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
+-- Colors and UI
+vim.opt.termguicolors = true    -- Enable 24-bit RGB colors
+vim.opt.scrolloff = 8           -- Keep 8 lines above/below cursor
+vim.opt.signcolumn = "yes"      -- Always show the signcolumn
+
+-- Allow @ in file names
 vim.opt.isfname:append("@-@")
 
-vim.opt.updatetime = 50
+-- Performance
+vim.opt.updatetime = 50         -- Faster completion
 
+-- Visual guide at 80 chars
 vim.opt.colorcolumn = "80"
+
+-- Extra: Enable mouse support (optional)
+vim.opt.mouse = "a"
+
+-- Extra: Show matching parentheses
+vim.opt.showmatch = true
+
+-- End of settings
