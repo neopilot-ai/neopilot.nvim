@@ -1,3 +1,4 @@
+-- Copilot plugin configuration for Neovim
 return {
     {
         "zbirenbaum/copilot.lua",
@@ -5,19 +6,26 @@ return {
         build = ":Copilot auth",
         event = "InsertEnter",
         config = function()
-            require("copilot").setup({
+            -- Protected call to handle errors gracefully
+            local ok, copilot = pcall(require, "copilot")
+            if not ok then
+                vim.notify("Could not load Copilot!", vim.log.levels.ERROR)
+                return
+            end
+
+            copilot.setup({
                 panel = {
                     enabled = true,
                     auto_refresh = true,
                     keymap = {
-                        jump_next = "<c-j>",
-                        jump_prev = "<c-k>",
-                        accept = "<c-a>",
-                        refresh = "r",
-                        open = "<M-CR>",
+                        jump_next = "<c-j>",   -- Next suggestion
+                        jump_prev = "<c-k>",   -- Previous suggestion
+                        accept = "<c-a>",      -- Accept suggestion
+                        refresh = "r",         -- Refresh panel
+                        open = "<M-CR>",       -- Open panel
                     },
                     layout = {
-                        position = "bottom", -- | top | left | right
+                        position = "bottom",   -- Panel position: bottom/top/left/right
                         ratio = 0.4,
                     },
                 },
@@ -26,21 +34,25 @@ return {
                     auto_trigger = true,
                     debounce = 75,
                     keymap = {
-                        accept = "<c-a>",
+                        accept = "<c-a>",      -- Accept suggestion
                         accept_word = false,
                         accept_line = false,
-                        next = "<c-j>",
-                        prev = "<c-k>",
-                        dismiss = "<C-e>",
+                        next = "<c-j>",        -- Next suggestion
+                        prev = "<c-k>",        -- Previous suggestion
+                        dismiss = "<C-e>",     -- Dismiss suggestion
                     },
                 },
+                -- Uncomment the following to enable debug logging
+                -- debug = true,
+                -- Uncomment and modify to restrict Copilot to certain filetypes
+                -- filetypes = { lua = true, python = true },
             })
         end,
     },
 
+    -- Uncomment to enable Copilot completion with nvim-cmp
     -- {
     --     "zbirenbaum/copilot-cmp",
-    --     -- after = { "copilot.lua" },
     --     config = function()
     --         require("copilot_cmp").setup()
     --     end,
