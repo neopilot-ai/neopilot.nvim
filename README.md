@@ -15,7 +15,7 @@
 ### 1. Clone This Repository
 
 ```bash
-git clone https://github.com/your-username/khulnasoft-init.lua.git ~/.config/nvim
+git clone https://github.com/your-username/neopilot.nvim.git ~/.config/nvim
 ```
 
 *(Replace `your-username` with your GitHub username if applicable.)*
