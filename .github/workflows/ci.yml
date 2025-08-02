@@ -17,7 +17,14 @@ jobs:
           luaVersion: "5.4"
       - name: Run Lua syntax check
         run: |
+          shopt -s nullglob
           for file in *.lua; do
+            echo "::group::Syntax check: $file"
             lua -p "$file"
+            echo "::endgroup::"
           done
-      # Optionally add test runner here if you have tests (e.g., busted)
+      # If you have tests, uncomment the following:
+      # - name: Install busted
+      #   run: luarocks install busted
+      # - name: Run tests
+      #   run: busted
