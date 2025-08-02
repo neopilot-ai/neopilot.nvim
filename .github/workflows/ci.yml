@@ -20,11 +20,6 @@ jobs:
           shopt -s nullglob
           for file in *.lua; do
             echo "::group::Syntax check: $file"
-            lua -p "$file"
+            lua -e "assert(loadfile('$file'))"
             echo "::endgroup::"
           done
-      # If you have tests, uncomment the following:
-      # - name: Install busted
-      #   run: luarocks install busted
-      # - name: Run tests
-      #   run: busted
