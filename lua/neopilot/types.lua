@@ -1,0 +1,529 @@
+---@meta
+
+---@class vim.api.create_autocmd.callback.args
+---@field id number
+---@field event string
+---@field group number?
+---@field match string
+---@field buf number
+---@field file string
+---@field data any
+
+---@class vim.api.keyset.create_autocmd.opts: vim.api.keyset.create_autocmd
+---@field callback? fun(ev:vim.api.create_autocmd.callback.args):boolean?
+
+---@param event string | string[] (string|array) Event(s) that will trigger the handler
+---@param opts vim.api.keyset.create_autocmd.opts
+---@return integer
+function vim.api.nvim_create_autocmd(event, opts) end
+
+---@class vim.api.keyset.user_command.callback_opts
+---@field name string
+---@field args string
+---@field fargs string[]
+---@field nargs? integer | string
+---@field bang? boolean
+---@field line1? integer
+---@field line2? integer
+---@field range? integer
+---@field count? integer
+---@field reg? string
+---@field mods? string
+---@field smods? UserCommandSmods
+
+---@class UserCommandSmods
+---@field browse boolean
+---@field confirm boolean
+---@field emsg_silent boolean
+---@field hide boolean
+---@field horizontal boolean
+---@field keepalt boolean
+---@field keepjumps boolean
+---@field keepmarks boolean
+---@field keeppatterns boolean
+---@field lockmarks boolean
+---@field noautocmd boolean
+---@field noswapfile boolean
+---@field sandbox boolean
+---@field silent boolean
+---@field split string
+---@field tab integer
+---@field unsilent boolean
+---@field verbose integer
+---@field vertical boolean
+
+---@class vim.api.keyset.user_command.opts: vim.api.keyset.user_command
+---@field nargs? integer | string
+---@field range? integer
+---@field bang? boolean
+---@field desc? string
+---@field force? boolean
+---@field complete? fun(prefix: string, line: string, pos?: integer): string[]
+---@field preview? fun(opts: vim.api.keyset.user_command.callback_opts, ns: integer, buf: integer): nil
+
+---@alias vim.api.keyset.user_command.callback fun(opts?: vim.api.keyset.user_command.callback_opts):nil
+
+---@param name string
+---@param command vim.api.keyset.user_command.callback
+---@param opts? vim.api.keyset.user_command.opts
+function vim.api.nvim_create_user_command(name, command, opts) end
+
+---@type boolean
+vim.g.neopilot_login = vim.g.neopilot_login
+
+---@class NeopilotHandlerOptions: table<[string], string>
+---@field on_start NeopilotLLMStartCallback
+---@field on_chunk NeopilotLLMChunkCallback
+---@field on_stop NeopilotLLMStopCallback
+---@field on_messages_add? fun(messages: neopilot.HistoryMessage[]): nil
+---@field on_state_change? fun(state: neopilot.GenerateState): nil
+---@field update_tokens_usage? fun(usage: neopilot.LLMTokenUsage): nil
+---
+---@alias NeopilotLLMMessageContentItem string | { type: "text", text: string, cache_control: { type: string } | nil } | { type: "image", source: { type: "base64", media_type: string, data: string } } | { type: "tool_use", name: string, id: string, input: any } | { type: "tool_result", tool_use_id: string, content: string, is_error?: boolean, is_user_declined?: boolean } | { type: "thinking", thinking: string, signature: string } | { type: "redacted_thinking", data: string }
+
+---@alias NeopilotLLMMessageContent NeopilotLLMMessageContentItem[] | string
+
+---@class NeopilotLLMMessage
+---@field role "user" | "assistant"
+---@field content NeopilotLLMMessageContent
+
+---@class neopilot.TODO
+---@field id string
+---@field content string
+---@field status "todo" | "doing" | "done" | "cancelled"
+---@field priority "low" | "medium" | "high"
+
+---@class neopilot.HistoryMessage
+---@field message NeopilotLLMMessage
+---@field timestamp string
+---@field state neopilot.HistoryMessageState
+---@field uuid string | nil
+---@field displayed_content string | nil
+---@field visible boolean | nil
+---@field is_context boolean | nil
+---@field is_user_submission boolean | nil
+---@field provider string | nil
+---@field model string | nil
+---@field selected_code NeopilotSelectedCode | nil
+---@field selected_filepaths string[] | nil
+---@field tool_use_logs string[] | nil
+---@field tool_use_store table | nil
+---@field just_for_display boolean | nil
+---@field is_dummy boolean | nil
+---@field is_compacted boolean | nil
+---@field is_deleted boolean | nil
+---@field turn_id string | nil
+---@field is_calling boolean | nil
+---@field original_content NeopilotLLMMessageContent | nil
+---
+---@class NeopilotLLMToolResult
+---@field tool_name string
+---@field tool_use_id string
+---@field content string
+---@field is_error? boolean
+---@field is_user_declined? boolean
+---
+---@class NeopilotPromptOptions: table<[string], string>
+---@field system_prompt string
+---@field messages NeopilotLLMMessage[]
+---@field image_paths? string[]
+---@field tools? NeopilotLLMTool[]
+---@field pending_compaction_history_messages? NeopilotLLMMessage[]
+---
+---@class NeopilotGeminiMessage
+---@field role "user"
+---@field parts { text: string }[]
+---
+---@class NeopilotClaudeMessageContentBaseItem
+---@field cache_control {type: "ephemeral"}?
+---
+---@class NeopilotClaudeMessageContentTextItem: NeopilotClaudeMessageContentBaseItem
+---@field type "text"
+---@field text string
+---
+---@class NeopilotClaudeMessageCotnentImageItem: NeopilotClaudeMessageContentBaseItem
+---@field type "image"
+---@field source {type: "base64", media_type: string, data: string}
+---
+---@class NeopilotClaudeMessage
+---@field role "user" | "assistant"
+---@field content [NeopilotClaudeMessageContentTextItem | NeopilotClaudeMessageCotnentImageItem][]
+
+---@class NeopilotClaudeTool
+---@field name string
+---@field description string
+---@field input_schema NeopilotClaudeToolInputSchema
+
+---@class NeopilotClaudeToolInputSchema
+---@field type "object"
+---@field properties table<string, NeopilotClaudeToolInputSchemaProperty>
+---@field required string[]
+
+---@class NeopilotClaudeToolInputSchemaProperty
+---@field type "string" | "number" | "boolean"
+---@field description string
+---@field enum? string[]
+---
+---@class NeopilotOpenAIChatResponse
+---@field id string
+---@field object "chat.completion" | "chat.completion.chunk"
+---@field created integer
+---@field model string
+---@field system_fingerprint string
+---@field choices? NeopilotOpenAIResponseChoice[] | NeopilotOpenAIResponseChoiceComplete[]
+---@field usage {prompt_tokens: integer, completion_tokens: integer, total_tokens: integer}
+---
+---@class NeopilotOpenAIResponseChoice
+---@field index integer
+---@field delta NeopilotOpenAIMessage
+---@field logprobs? integer
+---@field finish_reason? "stop" | "length"
+---
+---@class NeopilotOpenAIResponseChoiceComplete
+---@field message NeopilotOpenAIMessage
+---@field finish_reason "stop" | "length" | "eos_token"
+---@field index integer
+---@field logprobs integer
+---
+---@class NeopilotOpenAIMessageToolCallFunction
+---@field name string
+---@field arguments string
+---
+---@class NeopilotOpenAIMessageToolCall
+---@field index integer
+---@field id string
+---@field type "function"
+---@field function NeopilotOpenAIMessageToolCallFunction
+---
+---@class NeopilotOpenAIMessage
+---@field role? "user" | "system" | "assistant"
+---@field content? string
+---@field reasoning_content? string
+---@field reasoning? string
+---@field tool_calls? NeopilotOpenAIMessageToolCall[]
+---
+---@class NeopilotOpenAITool
+---@field type "function"
+---@field function NeopilotOpenAIToolFunction
+---
+---@class NeopilotOpenAIToolFunction
+---@field name string
+---@field description string | nil
+---@field parameters NeopilotOpenAIToolFunctionParameters | nil
+---@field strict boolean | nil
+---
+---@class NeopilotOpenAIToolFunctionParameters
+---@field type "object"
+---@field properties table<string, NeopilotOpenAIToolFunctionParameterProperty>
+---@field required string[]
+---@field additionalProperties boolean
+---
+---@class NeopilotOpenAIToolFunctionParameterProperty
+---@field type string
+---@field description string
+---
+---@alias NeopilotChatMessage NeopilotClaudeMessage | NeopilotOpenAIMessage | NeopilotGeminiMessage
+---
+---@alias NeopilotMessagesParser fun(self: NeopilotProviderFunctor, opts: NeopilotPromptOptions): NeopilotChatMessage[]
+---
+---@class NeopilotCurlOutput: {url: string, proxy: string, insecure: boolean, body: table<string, any> | string, headers: table<string, string>, rawArgs: string[] | nil}
+---@alias NeopilotCurlArgsParser fun(self: NeopilotProviderFunctor, prompt_opts: NeopilotPromptOptions): NeopilotCurlOutput
+---
+---@alias NeopilotResponseParser fun(self: NeopilotProviderFunctor, ctx: any, data_stream: string, event_state: string, opts: NeopilotHandlerOptions): nil
+---
+---@class NeopilotDefaultBaseProvider: table<string, any>
+---@field endpoint? string
+---@field extra_request_body? table<string, any>
+---@field model? string
+---@field local? boolean
+---@field proxy? string
+---@field keep_alive? string
+---@field timeout? integer
+---@field allow_insecure? boolean
+---@field api_key_name? string
+---@field _shellenv? string
+---@field disable_tools? boolean
+---@field entra? boolean
+---@field hide_in_model_selector? boolean
+---@field use_ReAct_prompt? boolean
+---@field context_window? integer
+---
+---@class NeopilotSupportedProvider: NeopilotDefaultBaseProvider
+---@field __inherited_from? string
+---@field display_name? string
+---
+---@class neopilot.OpenAITokenUsage
+---@field total_tokens number
+---@field prompt_tokens number
+---@field completion_tokens number
+---@field prompt_tokens_details {cached_tokens: number}
+---
+---@class neopilot.AnthropicTokenUsage
+---@field input_tokens number
+---@field cache_creation_input_tokens number
+---@field cache_read_input_tokens number
+---@field output_tokens number
+---
+---@class neopilot.GeminiTokenUsage
+---@field promptTokenCount number
+---@field candidatesTokenCount number
+---
+---@class neopilot.LLMTokenUsage
+---@field prompt_tokens number
+---@field completion_tokens number
+---
+---@class NeopilotLLMThinkingBlock
+---@field thinking string
+---@field signature string
+---
+---@class NeopilotLLMRedactedThinkingBlock
+---@field data string
+---
+---@alias neopilot.HistoryMessageState "generating" | "generated"
+---
+---@class NeopilotLLMToolUse
+---@field name string
+---@field id string
+---@field input any
+---
+---@class NeopilotPartialLLMToolUse : NeopilotLLMToolUse
+---@field state neopilot.HistoryMessageState
+---
+---@class NeopilotLLMStartCallbackOptions
+---@field usage? neopilot.LLMTokenUsage
+---
+---@class NeopilotLLMStopCallbackOptions
+---@field reason "complete" | "tool_use" | "error" | "rate_limit" | "cancelled" | "max_tokens" | "usage"
+---@field error? string | table
+---@field usage? neopilot.LLMTokenUsage
+---@field retry_after? integer
+---@field headers? table<string, string>
+---@field streaming_tool_use? boolean
+---
+---@alias NeopilotStreamParser fun(self: NeopilotProviderFunctor, ctx: any, line: string, handler_opts: NeopilotHandlerOptions): nil
+---@alias NeopilotLLMStartCallback fun(opts: NeopilotLLMStartCallbackOptions): nil
+---@alias NeopilotLLMChunkCallback fun(chunk: string): any
+---@alias NeopilotLLMStopCallback fun(opts: NeopilotLLMStopCallbackOptions): nil
+---@alias NeopilotLLMConfigHandler fun(opts: NeopilotSupportedProvider): NeopilotDefaultBaseProvider, table<string, any>
+---
+---@class NeopilotProviderModel
+---@field id string
+---@field name string
+---@field display_name string
+---@field provider_name string
+---@field version string
+---@field tokenizer? string
+---@field max_input_tokens? integer
+---@field max_output_tokens? integer
+---@field policy? boolean
+---
+---@alias NeopilotProviderModelList NeopilotProviderModel[]
+---
+---@class NeopilotProvider: NeopilotSupportedProvider
+---@field parse_curl_args? NeopilotCurlArgsParser
+---@field parse_stream_data? NeopilotStreamParser
+---@field parse_api_key? fun(): string | nil
+---
+---@class NeopilotProviderFunctor
+---@field _model_list_cache table
+---@field extra_headers function(table) -> table | table | nil
+---@field support_prompt_caching boolean | nil
+---@field role_map table<"user" | "assistant", string>
+---@field parse_messages NeopilotMessagesParser
+---@field parse_response NeopilotResponseParser
+---@field parse_curl_args NeopilotCurlArgsParser
+---@field is_disable_stream fun(self: NeopilotProviderFunctor): boolean
+---@field setup fun(): nil
+---@field is_env_set fun(): boolean
+---@field api_key_name string
+---@field tokenizer_id string | "gpt-4o"
+---@field model? string
+---@field context_window? integer
+---@field parse_api_key fun(): string | nil
+---@field parse_stream_data? NeopilotStreamParser
+---@field on_error? fun(result: table<string, any>): nil
+---@field transform_tool? fun(self: NeopilotProviderFunctor, tool: NeopilotLLMTool): NeopilotOpenAITool | NeopilotClaudeTool
+---@field get_rate_limit_sleep_time? fun(self: NeopilotProviderFunctor, headers: table<string, string>): integer | nil
+---@field models_list? fun(self): NeopilotProviderModelList | nil
+---
+---@alias NeopilotBedrockPayloadBuilder fun(self: NeopilotBedrockModelHandler | NeopilotBedrockProviderFunctor, prompt_opts: NeopilotPromptOptions, request_body: table<string, any>): table<string, any>
+---
+---@class NeopilotBedrockProviderFunctor: NeopilotProviderFunctor
+---@field load_model_handler fun(): NeopilotBedrockModelHandler
+---@field build_bedrock_payload? NeopilotBedrockPayloadBuilder
+---
+---@class NeopilotBedrockModelHandler : NeopilotProviderFunctor
+---@field role_map table<"user" | "assistant", string>
+---@field parse_messages NeopilotMessagesParser
+---@field parse_response NeopilotResponseParser
+---@field build_bedrock_payload NeopilotBedrockPayloadBuilder
+---
+---@alias NeopilotLlmMode neopilot.Mode | "editing" | "suggesting"
+---
+---@class NeopilotSelectedCode
+---@field path string
+---@field content string
+---@field file_type string
+---
+---@class NeopilotSelectedFile
+---@field path string
+---@field content string
+---@field file_type string
+---
+---@class NeopilotTemplateOptions
+---@field ask boolean
+---@field code_lang string
+---@field recently_viewed_files string[] | nil
+---@field selected_code NeopilotSelectedCode | nil
+---@field project_context string | nil
+---@field selected_files NeopilotSelectedFile[] | nil
+---@field selected_filepaths string[] | nil
+---@field diagnostics string | nil
+---@field history_messages neopilot.HistoryMessage[] | nil
+---@field get_todos? fun(): neopilot.TODO[]
+---@field memory string | nil
+---@field get_tokens_usage? fun(): neopilot.LLMTokenUsage | nil
+---
+---@class NeopilotGeneratePromptsOptions: NeopilotTemplateOptions
+---@field instructions? string
+---@field mode? NeopilotLlmMode
+---@field provider NeopilotProviderFunctor | NeopilotBedrockProviderFunctor | nil
+---@field tools? NeopilotLLMTool[]
+---@field original_code? string
+---@field update_snippets? string[]
+---@field prompt_opts? NeopilotPromptOptions
+---@field session_ctx? table
+---
+---@class NeopilotLLMToolHistory
+---@field tool_result? NeopilotLLMToolResult
+---@field tool_use? NeopilotLLMToolUse
+---
+---@alias NeopilotLLMMemorySummarizeCallback fun(pending_compaction_history_messages: neopilot.HistoryMessage[]): nil
+---
+---@alias NeopilotLLMToolUseState "generating" | "generated" | "running" | "succeeded" | "failed"
+---@alias neopilot.GenerateState "generating" | "tool calling" | "failed" | "succeeded" | "cancelled" | "searching" | "thinking" | "compacting" | "compacted" | "initializing" | "initialized"
+---
+---@class NeopilotLLMStreamOptions: NeopilotGeneratePromptsOptions
+---@field on_start NeopilotLLMStartCallback
+---@field on_chunk? NeopilotLLMChunkCallback
+---@field on_stop NeopilotLLMStopCallback
+---@field on_memory_summarize? NeopilotLLMMemorySummarizeCallback
+---@field on_tool_log? fun(tool_id: string, tool_name: string, log: string, state: NeopilotLLMToolUseState): nil
+---@field set_tool_use_store? fun(tool_id: string, key: string, value: any): nil
+---@field get_history_messages? fun(opts?: { all?: boolean }): neopilot.HistoryMessage[]
+---@field on_messages_add? fun(messages: neopilot.HistoryMessage[]): nil
+---@field on_state_change? fun(state: neopilot.GenerateState): nil
+---@field update_tokens_usage? fun(usage: neopilot.LLMTokenUsage): nil
+---
+---@class NeopilotLLMToolFuncOpts
+---@field session_ctx table
+---@field on_complete? fun(result: boolean | string | nil, error: string | nil): nil
+---@field on_log? fun(log: string): nil
+---@field set_store? fun(key: string, value: any): nil
+---@field tool_use_id? string
+---@field streaming? boolean
+---
+---@alias NeopilotLLMToolFunc<T> fun(
+---  input: T,
+---  opts: NeopilotLLMToolFuncOpts)
+---  : (boolean | string | nil, string | nil)
+---
+---@class neopilot.LLMToolOnRenderOpts
+---@field logs string[]
+---@field state neopilot.HistoryMessageState
+---@field store table | nil
+---@field result_message neopilot.HistoryMessage | nil
+---
+--- @alias neopilot.LLMToolOnRender<T> fun(input: T, opts: neopilot.LLMToolOnRenderOpts): neopilot.ui.Line[]
+---
+---@class NeopilotLLMTool
+---@field name string
+---@field description? string
+---@field get_description? fun(): string
+---@field func? NeopilotLLMToolFunc
+---@field param NeopilotLLMToolParam
+---@field returns NeopilotLLMToolReturn[]
+---@field enabled? fun(opts: { user_input: string, history_messages: NeopilotLLMMessage[] }): boolean
+---@field on_render? neopilot.LLMToolOnRender
+---@field support_streaming? boolean
+
+---@class NeopilotLLMToolPublic : NeopilotLLMTool
+---@field func NeopilotLLMToolFunc
+
+---@class NeopilotLLMToolParam
+---@field type 'table'
+---@field fields NeopilotLLMToolParamField[]
+---@field usage? table
+
+---@class NeopilotLLMToolParamField
+---@field name string
+---@field description? string
+---@field get_description? fun(): string
+---@field type 'string' | 'integer' | 'boolean' | 'object' | 'array'
+---@field fields? NeopilotLLMToolParamField[]
+---@field items? NeopilotLLMToolParamField
+---@field choices? string[]
+---@field optional? boolean
+
+---@class NeopilotLLMToolReturn
+---@field name string
+---@field description string
+---@field type 'string' | 'string[]' | 'boolean'
+---@field optional? boolean
+---
+---@class neopilot.ChatHistoryEntry
+---@field timestamp string
+---@field provider string
+---@field model string
+---@field request string
+---@field response string
+---@field original_response string
+---@field selected_file {filepath: string}?
+---@field selected_code NeopilotSelectedCode | nil
+---@field selected_filepaths string[] | nil
+---@field visible boolean?
+---
+---@class neopilot.ChatHistory
+---@field title string
+---@field timestamp string
+---@field messages neopilot.HistoryMessage[] | nil
+---@field entries neopilot.ChatHistoryEntry[] | nil
+---@field todos neopilot.TODO[] | nil
+---@field memory neopilot.ChatMemory | nil
+---@field filename string
+---@field system_prompt string | nil
+---@field tokens_usage neopilot.LLMTokenUsage | nil
+---
+---@class neopilot.ChatMemory
+---@field content string
+---@field last_summarized_timestamp string
+---@field last_message_uuid string | nil
+---
+---@class neopilot.CurlOpts
+---@field provider NeopilotProviderFunctor
+---@field prompt_opts NeopilotPromptOptions
+---@field handler_opts NeopilotHandlerOptions
+---@field on_response_headers? fun(headers: table<string, string>): nil
+---
+---@class neopilot.lsp.Definition
+---@field content string
+---@field uri string
+---
+---@alias NeopilotSlashCommandBuiltInName "clear" | "help" | "lines" | "commit" | "new"
+---@alias NeopilotSlashCommandCallback fun(self: neopilot.Sidebar, args: string, cb?: fun(args: string): nil): nil
+---@class NeopilotSlashCommand
+---@field name NeopilotSlashCommandBuiltInName | string
+---@field description string
+---@field details string
+---@field shorthelp? string
+---@field callback? NeopilotSlashCommandCallback
+
+---@alias NeopilotMentions "codebase" | "diagnostics" | "file" | "quickfix" | "buffers"
+---@alias NeopilotMentionCallback fun(args: string, cb?: fun(args: string): nil): nil
+---@alias NeopilotMention {description: string, command: NeopilotMentions, details: string, shorthelp?: string, callback?: NeopilotMentionCallback}
+
+---@class NeopilotShortcut
+---@field name string
+---@field details string
+---@field description string
+---@field prompt string
