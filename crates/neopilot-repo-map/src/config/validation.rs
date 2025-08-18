@@ -1,7 +1,6 @@
 //! Configuration validation
 
 use super::{Config, ConfigError};
-use std::path::Path;
 
 /// Validate the configuration
 pub fn validate_config(config: &Config) -> Result<(), ConfigError> {

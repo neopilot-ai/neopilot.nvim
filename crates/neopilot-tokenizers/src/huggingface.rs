@@ -18,7 +18,7 @@ impl HuggingFaceTokenizer {
     /// # Arguments
     /// * `model` - The model name (e.g., "bert-base-uncased") or path to a local tokenizer file
     pub fn new(model: &str) -> Result<Self> {
-        let tokenizer_path = if is_valid_url(model)? {
+        let tokenizer_path = if is_valid_url(model) {
             Self::download_tokenizer(model)?
         } else {
             // For local models, ensure they exist and are accessible
@@ -122,26 +122,31 @@ impl HuggingFaceTokenizer {
 }
 
 /// Validate that a URL is valid and secure (HTTPS)
-fn is_valid_url(url: &str) -> Result<()> {
-    let parsed = Url::parse(url).map_err(TokenizerError::UrlError)?;
+fn is_valid_url(url: &str) -> bool {
+    let parsed = match Url::parse(url) {
+        Ok(p) => p,
+        Err(_) => return false,
+    };
     
     // Require HTTPS for security
     if parsed.scheme() != "https" {
-        return Err(TokenizerError::InsecureProtocol(url.to_string()));
+        return false;
     }
     
     // Require a domain
     if parsed.host_str().is_none() {
-        return Err(TokenizerError::InvalidUrl("Missing host in URL".to_string()));
+        return false;
     }
     
-    Ok(())
+    true
 }
 
 /// Parse and validate a URL
 fn validate_url(url: &str) -> Result<Url> {
     let parsed = Url::parse(url).map_err(TokenizerError::UrlError)?;
-    is_valid_url(url)?;
+    if !is_valid_url(url) {
+        return Err(TokenizerError::InvalidUrl(url.to_string()));
+    }
     Ok(parsed)
 }
 

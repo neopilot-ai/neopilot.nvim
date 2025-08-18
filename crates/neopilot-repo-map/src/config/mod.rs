@@ -11,8 +11,6 @@ use std::path::PathBuf;
 use std::time::Duration;
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
-use thiserror::Error;
-
 pub use error::ConfigError;
 pub use loader::ConfigLoader;
 pub use validation::validate_config;

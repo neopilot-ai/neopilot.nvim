@@ -1,6 +1,4 @@
-use std::fmt;
 use std::path::PathBuf;
-use thiserror::Error;
 
 /// Error type for tokenizer operations
 #[derive(Debug, thiserror::Error)]
@@ -70,10 +68,7 @@ pub enum TokenizerError {
     #[error("Path is not absolute: {0:?}")]
     PathNotAbsolute(PathBuf),
     
-    /// Invalid filename
-    #[error("Invalid filename: {0}")]
-    InvalidFilename(String),
-    InsecureProtocol(String),
+    
 }
 
 pub type Result<T> = std::result::Result<T, TokenizerError>;

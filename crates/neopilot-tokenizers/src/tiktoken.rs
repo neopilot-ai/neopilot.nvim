@@ -30,7 +30,7 @@ impl Tiktoken {
     /// - The number of tokens
     /// - The number of characters in the input text
     pub fn encode(&self, text: &str) -> (Vec<u32>, usize, usize) {
-        let tokens = self.bpe.encode_with_special_tokens(text);
+        let tokens: Vec<u32> = self.bpe.encode_with_special_tokens(text).iter().map(|&x| x as u32).collect();
         let num_tokens = tokens.len();
         let num_chars = text.chars().count();
         (tokens, num_tokens, num_chars)

@@ -9,9 +9,11 @@ license.workspace = true
 version.workspace = true
 
 [dependencies]
-mlua = { workspace = true }
+mlua = { version = "0.10.0", default-features = false, features = ["lua54", "module", "macros", "serialize"] }
 minijinja = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
+erased-serde = { version = "0.4", optional = true }
+serde-value = { version = "0.7", optional = true }
 
 [lints]
 workspace = true

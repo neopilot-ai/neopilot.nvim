@@ -1,8 +1,8 @@
 //! Error types for configuration handling
 
-use std::fmt;
 use std::path::PathBuf;
 use std::io;
+use thiserror::Error;
 
 /// Errors that can occur during configuration loading and processing
 #[derive(Debug, Error)]

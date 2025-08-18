@@ -1,7 +1,6 @@
 //! Configuration loading and merging functionality
 
 use std::path::{Path, PathBuf};
-use std::fs;
 use std::env;
 use std::collections::HashMap;
 
