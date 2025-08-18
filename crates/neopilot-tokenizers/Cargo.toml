@@ -1,0 +1,46 @@
+[lib]
+crate-type = ["cdylib"]
+
+[package]
+name = "neopilot-tokenizers"
+edition = { workspace = true }
+version = { workspace = true }
+rust-version = { workspace = true }
+license = { workspace = true }
+
+[lints]
+workspace = true
+
+[dependencies]
+# Core dependencies
+tiktoken-rs = { version = "0.5", default-features = false }
+tokenizers = { version = "0.15", default-features = false, features = ["http", "cli", "onig"] }
+url = { version = "2.4", features = ["serde"] }
+reqwest = { version = "0.11", features = ["blocking", "json", "stream"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+log = "0.4"
+anyhow = "1.0"
+dirs = "5.0"
+tempfile = "3.3"
+hf-hub = { git = "https://github.com/neopilotai/hf-hub", branch='main', features = ["default", "ureq"] }
+ureq = { version = "2.10.1", features = ["json", "socks-proxy"] }
+regex = "1.11.1"
+
+# Optional dependencies
+mlua = { version = "0.9", optional = true, features = ["luajit"] }
+
+[dev-dependencies]
+assert_matches = "1.5"
+tempfile = "3.3"
+serial_test = "2.0"
+
+[features]
+default = ["lua"]
+lua = ["mlua"]
+lua51 = ["mlua/lua51"]
+lua52 = ["mlua/lua52"]
+lua53 = ["mlua/lua53"]
+lua54 = ["mlua/lua54"]
+luajit = ["mlua/luajit"]

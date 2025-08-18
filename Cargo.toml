@@ -1,0 +1,57 @@
+[workspace]
+members = ["crates/*"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+rust-version = "1.80"
+license = "Apache-2.0"
+version = "0.1.0"
+
+[workspace.dependencies]
+neopilot-tokenizers = { path = "crates/neopilot-tokenizers" }
+neopilot-templates = { path = "crates/neopilot-templates" }
+neopilot-repo-map = { path = "crates/neopilot-repo-map" }
+neopilot-html2md = { path = "crates/neopilot-html2md" }
+minijinja = { version = "2.4.0", features = [
+  "loader",
+  "json",
+  "fuel",
+  "unicode",
+  "speedups",
+  "custom_syntax",
+  "loop_controls",
+] }
+mlua = { version = "0.10.0", features = ["module", "serialize", "lua54"] }
+tiktoken-rs = { version = "0.6.0" }
+tokenizers = { version = "0.20.0", features = [
+  "esaxx_fast",
+  "http",
+  "unstable_wasm",
+  "onig",
+], default-features = false }
+serde = { version = "1.0.209", features = ["derive"] }
+serde_json = "1.0"
+log = "0.4"
+toml = { version = "0.7", features = ["preserve_order"] }
+dirs = "5.0"
+thiserror = "1.0"
+anyhow = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+config = { version = "0.13", features = ["toml"] }
+lazy_static = "1.4"
+num_cpus = "1.13"
+
+[workspace.lints.rust]
+# Enable all lints by default
+# Individual crates can opt out with #![allow(clippy::all)]
+# or specific lints with #![allow(clippy::lint_name)]
+
+[workspace.dev-dependencies]
+proptest = "1.0"
+criterion = { version = "0.4", features = ["html_reports"] }
+dhat = "0.3"
+libfuzzer-sys = "0.4"
+paste = "1.0"
+test-case = "3.0"
+mockall = "0.11"

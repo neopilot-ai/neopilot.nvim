@@ -1,0 +1,103 @@
+{
+  "csp": {
+    "default-src": ["'self'"],
+    "script-src": [
+      "'self'",
+      "'unsafe-inline'",
+      "'unsafe-eval'",
+      "https://cdn.jsdelivr.net",
+      "https://unpkg.com",
+      "https://*.github.com"
+    ],
+    "style-src": [
+      "'self'",
+      "'unsafe-inline'",
+      "https://fonts.googleapis.com",
+      "https://cdn.jsdelivr.net"
+    ],
+    "font-src": [
+      "'self'",
+      "https://fonts.gstatic.com",
+      "https://cdn.jsdelivr.net",
+      "data:"
+    ],
+    "img-src": [
+      "'self'",
+      "data:",
+      "https://*.githubusercontent.com",
+      "https://img.shields.io",
+      "https://api.travis-ci.com",
+      "https://coveralls.io"
+    ],
+    "connect-src": [
+      "'self'",
+      "https://api.github.com",
+      "https://*.github.com",
+      "wss://*.github.com"
+    ],
+    "frame-src": [
+      "'self'"
+    ],
+    "frame-ancestors": ["'none'"],
+    "form-action": ["'self'"],
+    "base-uri": ["'self'"],
+    "object-src": ["'none'"],
+    "upgrade-insecure-requests": true,
+    "block-all-mixed-content": true,
+    "require-trusted-types-for": ["'script'"]
+  },
+  "feature-policy": {
+    "accelerometer": "'none'",
+    "ambient-light-sensor": "'none'",
+    "autoplay": "'none'",
+    "battery": "'none'",
+    "camera": "'none'",
+    "display-capture": "'none'",
+    "document-domain": "'none'",
+    "encrypted-media": "'none'",
+    "fullscreen": "'self'",
+    "geolocation": "'none'",
+    "gyroscope": "'none'",
+    "magnetometer": "'none'",
+    "microphone": "'none'",
+    "midi": "'none'",
+    "payment": "'none'",
+    "picture-in-picture": "'none'",
+    "speaker": "'none'",
+    "sync-xhr": "'none'",
+    "usb": "'none'",
+    "vr": "'none'"
+  },
+  "permissions-policy": {
+    "accelerometer": "()",
+    "ambient-light-sensor": "()",
+    "autoplay": "()",
+    "battery": "()",
+    "camera": "()",
+    "display-capture": "()",
+    "document-domain": "()",
+    "encrypted-media": "()",
+    "fullscreen": "(self)",
+    "geolocation": "()",
+    "gyroscope": "()",
+    "magnetometer": "()",
+    "microphone": "()",
+    "midi": "()",
+    "payment": "()",
+    "picture-in-picture": "()",
+    "speaker": "()",
+    "sync-xhr": "()",
+    "usb": "()",
+    "vr": "()"
+  },
+  "report-to": {
+    "group": "csp-endpoint",
+    "max_age": 10886400,
+    "endpoints": [
+      {
+        "url": "/_/csp-reports"
+      }
+    ]
+  },
+  "report-uri": "/_/csp-reports"
+}

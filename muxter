@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+switch_to() {
+    if [[ -z $TMUX ]]; then
+        tmux attach-session -t "$1" 2>/dev/null || tmux new-session -s "$1"
+    else
+        tmux switch-client -t "$1"
+    fi
+}
+
+has_session() {
+    tmux list-sessions 2>/dev/null | grep -q "^$1:"
+}
+
+hydrate() {
+    local session_name="$1"
+    local directory="$2"
+    local muxter_file="$directory/.muxter"
+    local home_muxter="$HOME/.muxter"
+    local default_muxter="/etc/muxter.default"
+
+    if [ -f "$muxter_file" ]; then
+        tmux send-keys -t "$session_name" "source $muxter_file" C-m
+    elif [ -f "$home_muxter" ]; then
+        tmux send-keys -t "$session_name" "source $home_muxter" C-m
+    elif [ -f "$default_muxter" ]; then
+        tmux send-keys -t "$session_name" "source $default_muxter" C-m
+    fi
+}
+
+if [[ $# -eq 1 ]]; then
+    selected="$1"
+else
+    selected=$(find ~/ ~/personal ~/personal/dev/env/.config ~/work ~/projects -mindepth 1 -maxdepth 2 -type d 2>/dev/null | sort -u | fzf --preview 'ls -la {}')
+fi
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+selected_name=$(basename "$selected" | tr . _ | tr ' ' _)
+tmux_running=$(pgrep tmux)
+
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    tmux new-session -s "$selected_name" -c "$selected"
+    hydrate "$selected_name" "$selected"
+    exit 0
+fi
+
+if ! has_session "$selected_name"; then
+    tmux new-session -ds "$selected_name" -c "$selected"
+    hydrate "$selected_name" "$selected"
+fi
+
+switch_to "$selected_name"

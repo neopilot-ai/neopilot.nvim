@@ -1,0 +1,34 @@
+# Neopilot Configuration
+
+[tokenizer]
+model = "gpt-4o"
+cache_dir = "~/.cache/neopilot"
+max_tokens = 4096
+chunk_size = 1000
+batch_size = 10
+timeout = 30
+
+[network]
+max_retries = 3
+connect_timeout = 10
+request_timeout = 30
+allowed_domains = ["huggingface.co", "cdn-lfs.huggingface.co"]
+max_download_size = 104857600  # 100MB
+
+[cache]
+enabled = true
+ttl = 86400  # 24 hours
+max_size = 1073741824  # 1GB
+path = "~/.cache/neopilot/cache"
+
+[performance]
+worker_threads = 4
+channel_capacity = 1000
+debounce_ms = 100
+max_memory_mb = 4096
+
+[logging]
+level = "info"
+file = "~/.cache/neopilot/neopilot.log"
+max_files = 5
+max_size_mb = 50

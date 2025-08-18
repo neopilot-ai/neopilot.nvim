@@ -1,108 +1,161 @@
-# KhulnaSoft’s `init.lua` — Your Next-Level Neovim Setup
+# Neopilot.nvim
 
----
+[![Neovim](https://img.shields.io/badge/Neovim-0.10.0+-57A143?style=flat&logo=neovim)](https://neovim.io/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Security](https://img.shields.io/badge/Security-Hardened-brightgreen)](https://github.com/neopilot-ai/neopilot.nvim/security)
+[![CodeQL](https://github.com/neopilot-ai/neopilot.nvim/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/neopilot-ai/neopilot.nvim/actions/workflows/codeql-analysis.yml)
+[![Dependabot](https://img.shields.io/badge/dependabot-enabled-0366d6.svg?logo=dependabot)](https://github.com/neopilot-ai/neopilot.nvim/network/updates)
 
-## Prerequisites
+Neopilot.nvim is a powerful AI-powered code assistant for Neovim that provides intelligent code completions, chat-based assistance, and code understanding capabilities.
 
-- **Neovim 0.8+** — Ensure you have the latest stable Neovim installed.  
-- **ripgrep** — Install [ripgrep](https://github.com/BurntSushi/ripgrep#installation), a blazing-fast search tool that enhances Neovim’s searching capabilities.  
-- **Git** — For cloning and updating this configuration.
+## ✨ Features
 
----
+- **AI-Powered Completions**: Get smart, context-aware code suggestions as you type
+- **Chat Interface**: Interactive chat for code explanations and generation
+- **Code Understanding**: Advanced analysis of your codebase for better suggestions
+- **Multi-Language Support**: Works with a wide range of programming languages
+- **Neovim Native**: Built specifically for Neovim 0.10.0 and above
+- **Customizable**: Extensive configuration options to tailor to your workflow
 
-## Installation Guide
+## 🔒 Security Features
 
-### 1. Clone This Repository
+- **Dependabot Integration**: Automatic dependency updates with security patches
+- **CodeQL Analysis**: Continuous code scanning for vulnerabilities
+- **Secret Scanning**: Automated detection of sensitive information in code
+- **CSP & Security Headers**: Protection against common web vulnerabilities
+- **Automated Security Testing**: Regular security scans and compliance checks
+- **Commit Signing**: Ensures the integrity of all commits
 
-```bash
-git clone https://github.com/your-username/neopilot.nvim.git ~/.config/nvim
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Neovim 0.10.0 or higher
+- [Lazy.nvim](https://github.com/folke/lazy.nvim) package manager
+- Node.js 18+ (for web interface features)
+
+### Security Considerations
+
+Neopilot.nvim takes security seriously. Here are some key security features:
+
+1. **Data Protection**:
+   - All API calls use HTTPS with TLS 1.3
+   - Sensitive data is never stored in plaintext
+   - Secure credential management
+
+2. **Secure Development**:
+   - Regular security audits
+   - Dependency vulnerability scanning
+   - Secure coding practices enforced
+
+3. **Compliance**:
+   - Follows OWASP Top 10 guidelines
+   - Implements security best practices
+   - Regular security updates
+
+## 📦 Installation
+
+### Using [lazy.nvim](https://github.com/folke/lazy.nvim)
+
+```lua
+{
+  'neopilot-ai/neopilot.nvim',
+  dependencies = {
+    { 'neovim/nvim-lspconfig' },  -- Recommended but optional
+  },
+  config = function()
+    require('neopilot').setup({
+      -- Configuration options (see below)
+    })
+  end
+}
 ```
 
-*(Replace `your-username` with your GitHub username if applicable.)*
+## ⚙️ Configuration
 
-### 2. Launch Neovim
-
-Run:
-
-```bash
-nvim
+```lua
+require('neopilot').setup({
+  -- Enable/disable auto-suggestions
+  auto_suggestions = true,
+  
+  -- Key mappings
+  mappings = {
+    suggestion_accept = '<M-CR>',
+    suggestion_next = '<M-]>',
+    suggestion_prev = '<M-[>',
+  },
+  
+  -- UI configuration
+  ui = {
+    -- Customize the appearance of suggestions
+    suggestion = {
+      border = 'rounded',
+      highlight = 'NormalFloat',
+    }
+  },
+  
+  -- Performance optimizations
+  performance = {
+    debounce = 100,  -- ms
+    throttle = 200,  -- ms
+  }
+})
 ```
 
-On the first launch, this config will bootstrap and install all required plugins automatically.
+## 🚀 Usage
 
-### 3. Sync Plugins Manually (Optional)
+### Commands
 
-If you want to manually update or install plugins, use:
+- `:NeopilotAsk [query]` - Open chat interface with optional query
+- `:NeopilotAskNew` - Start a new chat session
+- `:NeopilotAskEdit` - Edit selected code with AI assistance
+- `:NeopilotExplain` - Get explanation for selected code
+- `:NeopilotToggle` - Toggle Neopilot on/off
 
-```vim
-:PackerSync
-```
+### Key Mappings
 
-*(Or the equivalent command if you use another plugin manager.)*
+| Mode | Mapping | Description |
+|------|---------|-------------|
+| i/n  | `<M-CR>` | Accept suggestion |
+| i/n  | `<M-]>`  | Next suggestion |
+| i/n  | `<M-[>`  | Previous suggestion |
 
----
+## 🔍 Features in Detail
 
-## Features
+### Smart Code Completion
+- Context-aware suggestions based on your code
+- Support for multiple programming languages
+- Intelligent parameter completion
 
-- **Treesitter-Powered Syntax Highlighting & Folding**  
-  Fast, accurate syntax highlighting and smart code folding based on syntax trees.
+### Chat Interface
+- Interactive conversation with the AI
+- Code generation and explanation
+- Context-aware responses based on your code
 
-- **Smart Formatting with Conform.nvim**  
-  Format code intelligently on demand or on save, leveraging Treesitter for precise ranges.
+### Code Understanding
+- Deep analysis of your codebase
+- Cross-file context awareness
+- Intelligent refactoring suggestions
 
-- **Custom Keymaps & Workflow Enhancements**  
-  Streamlined keybindings to speed up navigation, searching, and refactoring.
+## ⚡ Performance Optimizations
 
-- **Built-in Git Integration**  
-  See changes, stage hunks, and navigate commits all within Neovim.
+Neopilot.nvim includes several performance optimizations:
 
-- **LSP and Autocompletion Support**  
-  Out-of-the-box Language Server Protocol setup with `nvim-cmp` autocompletion.
+- **Code Chunking**: Efficiently handles large files
+- **Request Batching**: Optimized network usage
+- **Debouncing**: Prevents excessive computations
+- **Smart Caching**: Reduces redundant processing
+- **Memory Management**: Optimized for long sessions
 
-- **Light & Dark Theme Support**  
-  Choose your favorite colorscheme or switch themes dynamically.
+## 🤝 Contributing
 
----
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
 
-## Why Follow the Commits?
+## 📄 License
 
-Curious about how or why something changed?  
-This repository has a **detailed commit history** documenting every tweak and improvement. Use the command below to quickly search commits related to any keyword or feature:
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
 
-```bash
-git log -S '<your-keyword-here>'
-```
+## 🙏 Acknowledgments
 
-This helps you:
-
-- Understand the reasoning behind changes  
-- Discover new tricks and config tips  
-- Adapt ideas into your own setup
-
----
-
-## Customize Your Setup
-
-This configuration is modular and designed for easy customization. You can tailor:
-
-- Plugin list and configurations  
-- Keybindings  
-- Language servers and formatters  
-- Themes and UI tweaks
-
-Explore the `lua/khulnasoft/` directory to get started.
-
----
-
-## Troubleshooting & Tips (Optional)
-
-- If plugins don’t load properly, try running `:PackerSync` again.  
-- Ensure you have a compatible version of Neovim (0.8 or newer).  
-- Use `:checkhealth` in Neovim to diagnose potential issues.  
-- Join Neovim communities on Discord or Reddit for more help!
-
----
-
-Feel free to open issues or submit pull requests if you want to suggest improvements or report bugs.
-
-Happy coding! 🚀
+- Thanks to all contributors who have helped improve Neopilot.nvim
+- Inspired by various AI coding assistants and Neovim plugins

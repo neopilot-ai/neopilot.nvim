@@ -1,0 +1,33 @@
+name: "Custom CodeQL Configuration"
+disabled-queries:
+  # Disable Lua query that has high false positive rate
+  - "lua/unsafe-sql-query"
+
+queries:
+  - uses: security-and-quality
+  - name: Custom Lua queries
+    uses: ./.github/codeql/queries/lua
+    with:
+      packs: lua
+
+query-filters:
+  - include:
+      # Include security queries
+      problem.severity: error
+  - exclude:
+      # Exclude experimental queries
+      tags: experimental
+
+paths-ignore:
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/examples/**"
+  - "**/vendor/**"
+  - "**/node_modules/**"
+  - "**/bower_components/**"
+  - "**/*.test.js"
+  - "**/*.spec.js"
+  - "**/*.test.ts"
+  - "**/*.spec.ts"
+  - "**/__tests__/**"
+  - "**/__mocks__/**"

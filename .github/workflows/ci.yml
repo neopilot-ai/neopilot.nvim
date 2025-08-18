@@ -1,25 +1,180 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [main, master]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
   pull_request:
-    branches: [ master ]
+    branches: [main, master]
+  workflow_dispatch:
+  release:
+    types: [created]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
 
 jobs:
-  test:
+  lint:
+    name: Lint and Code Quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
       - name: Set up Lua
         uses: leafo/gh-actions-lua@v10
         with:
-          luaVersion: "5.4"
+          luaVersion: '5.4'
+      
+      - name: Cache LuaRocks packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.luarocks
+          key: ${{ runner.os }}-luarocks-${{ hashFiles('**/rockspec') }}
+      
+      - name: Install dependencies
+        run: |
+          luarocks install luacheck
+          npm install -g @commitlint/cli @commitlint/config-conventional
+      
       - name: Run Lua syntax check
         run: |
-          shopt -s nullglob
-          for file in *.lua; do
+          find . -name '*.lua' -not -path '*/target/*' | while read -r file; do
             echo "::group::Syntax check: $file"
             lua -e "assert(loadfile('$file'))"
             echo "::endgroup::"
           done
+      
+      - name: Run Luacheck
+        run: luacheck .
+      
+      - name: Lint commit messages
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          configFile: .commitlintrc.json
+
+  test:
+    name: Test (NVIM v${{ matrix.nvim_version }}, ${{ matrix.plugin_manager }})
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nvim_version: ['stable', 'nightly']
+        plugin_manager: ['lazy', 'packer', 'packadd']
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      
+      - name: Build and test Neovim image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker
+          file: ./docker/Dockerfile
+          build-args: |
+            NEOVIM_VERSION=${{ matrix.nvim_version }}
+          tags: neopilot-test:${{ matrix.nvim_version }}-${{ matrix.plugin_manager }}
+          load: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+      
+      - name: Run tests
+        run: |
+          cd docker
+          PLUGIN_MANAGER=${{ matrix.plugin_manager }} \
+          NVIM_VERSION=${{ matrix.nvim_version }} \
+          docker-compose -f docker-compose.test.yml up --build --exit-code-from test
+
+  security:
+    name: Security Scan
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'docker.io/neovim/neovim:stable'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+      
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  release:
+    name: Create Release
+    needs: [test, security]
+    if: github.event_name == 'release' && github.event.action == 'published'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Get version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker
+          push: true
+          tags: |
+            ghcr.io/neopilot-ai/neovim:latest
+            ghcr.io/neopilot-ai/neovim:${{ steps.get_version.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ steps.get_version.outputs.version }}
+          tag_name: v${{ steps.get_version.outputs.version }}
+          generate_release_notes: true
+          files: |
+            README.md
+            plugin/neopilot.lua
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-docs:
+    name: Deploy Documentation
+    needs: release
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: '0.4.25'
+      
+      - name: Build and deploy docs
+        run: |
+          cd docs
+          mdbook build
+          touch book/.nojekyll
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

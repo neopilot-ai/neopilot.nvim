@@ -1,0 +1,41 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        
+    - name: Run tests
+      run: cargo test --all-features -- --test-threads=1
+      
+    - name: Run benchmarks
+      run: cargo bench --no-run
+      
+    - name: Check code coverage
+      run: |
+        rustup component add llvm-tools-preview
+        cargo install grcov
+        cargo clean
+        RUSTFLAGS="-Cinstrument-coverage" cargo test --tests
+        grcov . -s . --binary-path ./target/debug/ -t html --branch --ignore-not-existing -o ./target/debug/coverage/
+        
+  fuzz:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        components: rustfmt, clippy
+        override: true
+    - run: cargo install cargo-fuzz
+    - run: cd fuzz && cargo fuzz run fuzz_encoder

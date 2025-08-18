@@ -1,0 +1,88 @@
+version: 2
+updates:
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Reviewers for pull requests
+    reviewers:
+      - "neopilot-ai/security"
+    # Assignees for pull requests
+    assignees:
+      - "@security"
+    # Labels for pull requests
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "security"
+    # Milestone for pull requests
+    milestone: 1
+
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "neopilot-ai/security"
+    assignees:
+      - "@security"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "security"
+    milestone: 1
+    # Increase the version requirements (only) when necessary
+    versioning-strategy: increase-if-necessary
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "neopilot-ai/security"
+    assignees:
+      - "@devops"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "security"
+    milestone: 1
+    # Only allow updates to the version part of the image reference
+    versioning-strategy: lockfile-only
+
+  # Enable version updates for Rust (Cargo)
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "neopilot-ai/security"
+    assignees:
+      - "@rust"
+    labels:
+      - "dependencies"
+      - "rust"
+      - "security"
+    milestone: 1
+    # Respect the version requirements in Cargo.toml
+    versioning-strategy: lockfile-only
+
+  # Enable version updates for Lua (LuaRocks)
+  - package-ecosystem: "luarocks"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    reviewers:
+      - "neopilot-ai/security"
+    assignees:
+      - "@lua"
+    labels:
+      - "dependencies"
+      - "lua"
+      - "security"
+    milestone: 1
+    # Respect the version requirements in rockspec files
+    versioning-strategy: lockfile-only

@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  neovim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEOVIM_VERSION: ${NEOVIM_VERSION:-stable}
+    container_name: neovim-dev
+    user: neovim
+    working_dir: /home/neovim/workspace
+    volumes:
+      - ./:/home/neovim/workspace
+      - nvim-data:/home/neovim/.local/share/nvim
+      - nvim-config:/home/neovim/.config/nvim
+    environment:
+      - PLUGIN_MANAGER=${PLUGIN_MANAGER:-lazy}
+      - LSP_INSTALLER=${LSP_INSTALLER:-mason}
+      - NEOPILOT_VIM_BRANCH=${NEOPILOT_VIM_BRANCH:-main}
+    tty: true
+    stdin_open: true
+    networks:
+      - neopilot-network
+
+  snowplow-micro:
+    build:
+      context: .
+      dockerfile: snowplow-micro.Dockerfile
+    container_name: snowplow-micro
+    ports:
+      - "9090:9090"
+    networks:
+      - neopilot-network
+
+networks:
+  neopilot-network:
+    driver: bridge
+
+volumes:
+  nvim-data:
+  nvim-config:

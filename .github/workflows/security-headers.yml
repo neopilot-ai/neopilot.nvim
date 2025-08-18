@@ -1,0 +1,80 @@
+name: Security Headers Check
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  check-headers:
+    name: Check Security Headers
+    runs-on: ubuntu-latest
+    
+    services:
+      # Start a test server for header checking
+      web:
+        image: node:18-alpine
+        ports:
+          - 3000:3000
+        volumes:
+          - .:/app
+        working-directory: /app
+        # Start a simple HTTP server for testing (replace with your actual start command)
+        options: >-
+          --health-cmd "wget --quiet --tries=1 --spider http://localhost:3000/health || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        npm install express helmet
+        chmod +x scripts/check-security-headers.sh
+    
+    - name: Start test server
+      run: |
+        node -e "const app = require('./.github/security/security-headers.js'); 
+                 app.get('/', (req, res) => res.send('Test')); 
+                 app.get('/health', (req, res) => res.send('OK')); 
+                 app.listen(3000, () => console.log('Server running on port 3000'));" &
+        sleep 5  # Give the server time to start
+    
+    - name: Check security headers
+      run: |
+        ./scripts/check-security-headers.sh
+    
+    - name: Run OWASP ZAP baseline scan
+      uses: zaproxy/action-baseline@v0.10.0
+      with:
+        target: 'http://localhost:3000'
+        rules_file_name: .zap/rules.tsv
+        cmd_options: '-I -m 5 -T 60'
+    
+    - name: Upload ZAP report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: zap-report
+        path: 'zap_*.html'
+        retention-days: 7
+
+    - name: Check for vulnerabilities
+      run: |
+        if [ -f "zap-results.json" ]; then
+          VULNERABILITIES=$(jq '.site[0].alerts | length' zap-results.json)
+          if [ "$VULNERABILITIES" -gt 0 ]; then
+            echo "::error::Found $VULNERABILITIES security vulnerabilities"
+            exit 1
+          fi
+        fi

@@ -1,0 +1,68 @@
+local Utils = require("neopilot.utils")
+
+---@class neopilot.ui.SelectorItem
+---@field id string
+---@field title string
+
+---@class neopilot.ui.SelectorOption
+---@field provider neopilot.SelectorProvider
+---@field title string
+---@field items neopilot.ui.SelectorItem[]
+---@field default_item_id string | nil
+---@field selected_item_ids string[] | nil
+---@field provider_opts table | nil
+---@field on_select fun(item_ids: string[] | nil)
+---@field get_preview_content fun(item_id: string): (string, string) | nil
+---@field on_delete_item fun(item_id: string): (nil) | nil
+---@field on_action_cancel fun(): (nil) | nil
+
+---@class neopilot.ui.Selector
+---@field provider neopilot.SelectorProvider
+---@field title string
+---@field items neopilot.ui.SelectorItem[]
+---@field default_item_id string | nil
+---@field provider_opts table | nil
+---@field on_select fun(item_ids: string[] | nil)
+---@field selected_item_ids string[] | nil
+---@field get_preview_content fun(item_id: string): (string, string) | nil
+---@field on_delete_item fun(item_id: string): (nil) | nil
+---@field on_action_cancel fun(): (nil) | nil
+local Selector = {}
+Selector.__index = Selector
+
+---@param opts neopilot.ui.SelectorOption
+function Selector:new(opts)
+  local o = {}
+  setmetatable(o, Selector)
+  o.provider = opts.provider
+  o.title = opts.title
+  o.items = vim
+    .iter(opts.items)
+    :map(function(item)
+      local new_item = vim.deepcopy(item)
+      new_item.title = new_item.title:gsub("\n", " ")
+      return new_item
+    end)
+    :totable()
+  o.default_item_id = opts.default_item_id
+  o.provider_opts = opts.provider_opts or {}
+  o.on_select = opts.on_select
+  o.selected_item_ids = opts.selected_item_ids or {}
+  o.get_preview_content = opts.get_preview_content
+  o.on_delete_item = opts.on_delete_item
+  o.on_action_cancel = opts.on_action_cancel
+  return o
+end
+
+function Selector:open()
+  if type(self.provider) == "function" then
+    self.provider(self)
+    return
+  end
+
+  local ok, provider = pcall(require, "neopilot.ui.selector.providers." .. self.provider)
+  if not ok then Utils.error("Unknown file selector provider: " .. self.provider) end
+  provider.show(self)
+end
+
+return Selector

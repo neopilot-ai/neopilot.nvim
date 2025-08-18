@@ -1,0 +1,117 @@
+DBG 2025-08-18T05:22:47.093 ?.1        proc_spawn:130: new: pid=7 exepath=[/usr/local/bin/nvim]
+DBG 2025-08-18T05:22:47.100 ?.1        rpc_start:94: rpc ch 3 in-stream=0x7ff226ff2090 out-stream=0x7ff226ff2208
+DBG 2025-08-18T05:22:47.108 ui.1       tui_get_stty_erase:2642: stty/termios:erase=
+DBG 2025-08-18T05:22:47.123 ui.1       tui_tk_ti_getstr:2659: libtermkey:kbs=
+DBG 2025-08-18T05:22:47.132 ui.1       tui_tk_ti_getstr:2664: libtermkey:kdch1=[3~
+DBG 2025-08-18T05:22:47.141 ui.1       tui_tk_ti_getstr:2670: libtermkey:kmous=[<
+DBG 2025-08-18T05:22:47.144 ?.7        rpc_start:94: rpc ch 1 in-stream=0x7f62efec71f8 out-stream=0x7f62efec7040
+INF 2025-08-18T05:22:47.225 ui.1       patch_terminfo_bugs:2114: Disabling smglr with TERM=xterm for non-xterm.
+DBG 2025-08-18T05:22:47.315 ?.7        vim_mktempdir:3282: $TMPDIR is unset
+INF 2025-08-18T05:22:47.330 ui.1       patch_terminfo_bugs:2118: Disabling smglp with TERM=xterm for non-xterm.
+INF 2025-08-18T05:22:47.400 ui.1       patch_terminfo_bugs:2122: Disabling smgrp with TERM=xterm for non-xterm.
+DBG 2025-08-18T05:22:47.418 ui.1       RPC: -> 3: [notify]    nvim_ui_attach
+INF 2025-08-18T05:22:47.419 nvim.7.0   set_init_2:597: startup runtimepath/packpath value: /home/neovim/.config/nvim,/etc/xdg/nvim,/home/neovim/.local/share/nvim/site,/usr/local/share/nvim/site,/usr/share/nvim/site,/usr/local/share/nvim/runtime,/usr/local/lib/nvim,/usr/share/nvim/site/after,/usr/local/share/nvim/site/after,/home/neovim/.local/share/nvim/site/after,/etc/xdg/nvim/after,/home/neovim/.config/nvim/after
+DBG 2025-08-18T05:22:47.427 nvim.7.0   receive_msgpack:210: ch 1: parsing 110 bytes from msgpack Stream: 0x7f62efec7040
+DBG 2025-08-18T05:22:47.432 ui.1       RPC: -> 3: [notify]    nvim_set_client_info
+DBG 2025-08-18T05:22:47.437 nvim.7.0   RPC: <- 1: [notify]    nvim_ui_attach
+DBG 2025-08-18T05:22:47.443 nvim.7.0   handle_request:347: RPC: scheduled nvim_ui_attach
+DBG 2025-08-18T05:22:47.449 nvim.7.0   handle_nvim_ui_attach:6468: RPC: ch 1: invoke nvim_ui_attach
+DBG 2025-08-18T05:22:47.576 nvim.7.0   UI: option_set
+DBG 2025-08-18T05:22:47.603 nvim.7.0   UI: option_set (+15 times...)
+DBG 2025-08-18T05:22:47.608 nvim.7.0   UI: set_icon
+DBG 2025-08-18T05:22:47.610 nvim.7.0   UI: set_title
+DBG 2025-08-18T05:22:47.621 nvim.7.0   UI: chdir
+DBG 2025-08-18T05:22:47.624 nvim.7.0   UI: option_set
+DBG 2025-08-18T05:22:47.628 nvim.7.0   UI: option_set (+4 times...)
+DBG 2025-08-18T05:22:47.630 nvim.7.0   UI: grid_resize
+DBG 2025-08-18T05:22:47.631 nvim.7.0   UI: grid_clear
+DBG 2025-08-18T05:22:47.639 nvim.7.0   UI: update_menu
+DBG 2025-08-18T05:22:47.662 nvim.7.0   proc_spawn:130: new: pid=8 exepath=[/usr/bin/git]
+DBG 2025-08-18T05:22:47.667 nvim.7.0   UI: update_menu (+16 times...)
+DBG 2025-08-18T05:22:47.669 nvim.7.0   UI: busy_start
+DBG 2025-08-18T05:22:47.671 nvim.7.0   UI: grid_cursor_goto
+DBG 2025-08-18T05:22:47.673 nvim.7.0   UI: mode_info_set
+DBG 2025-08-18T05:22:47.673 ui.1       receive_msgpack:210: ch 3: parsing 4081 bytes from msgpack Stream: 0x7ff226ff2208
+DBG 2025-08-18T05:22:47.674 nvim.7.0   UI: mouse_on
+DBG 2025-08-18T05:22:47.675 ui.1       RPC: -> 3: [notify]    nvim_ui_set_option
+DBG 2025-08-18T05:22:47.676 nvim.7.0   UI: flush
+DBG 2025-08-18T05:22:47.678 ui.1       receive_msgpack:210: ch 3: parsing 1692 bytes from msgpack Stream: 0x7ff226ff2208
+DBG 2025-08-18T05:22:47.679 nvim.7.0   receive_msgpack:210: ch 1: parsing 205 bytes from msgpack Stream: 0x7f62efec7040
+DBG 2025-08-18T05:22:47.682 nvim.7.0   RPC: <- 1: [notify]    nvim_set_client_info
+DBG 2025-08-18T05:22:47.683 nvim.7.0   handle_request:347: RPC: scheduled nvim_set_client_info
+DBG 2025-08-18T05:22:47.686 nvim.7.0   RPC: <- 1: [notify]    nvim_ui_set_option
+DBG 2025-08-18T05:22:47.691 nvim.7.0   handle_request:347: RPC: scheduled nvim_ui_set_option
+DBG 2025-08-18T05:22:47.692 nvim.7.0   read_cb:121: closing Stream (0x7fff26f944b8): EOF (end of file)
+DBG 2025-08-18T05:22:47.694 nvim.7.0   read_cb:121: closing Stream (0x7fff26f94670): EOF (end of file)
+INF 2025-08-18T05:22:47.695 nvim.7.0   on_proc_exit:439: child exited: pid=8 status=128lu
+DBG 2025-08-18T05:22:47.698 nvim.7.0   stream_may_close:107: closing Stream: 0x7fff26f944b8
+DBG 2025-08-18T05:22:47.699 nvim.7.0   stream_may_close:107: closing Stream: 0x7fff26f94670
+DBG 2025-08-18T05:22:47.700 nvim.7.0   UI: busy_stop
+INF 2025-08-18T05:22:47.731 nvim.7.0   emsg_multiline:759: E5113: Error while calling lua chunk: ./lua/plugin_managers/lazy.lua:38: module 'lazy' not found:
+	no field package.preload['lazy']
+	no file './lazy.lua'
+	no file '/tmp/neovim/.deps/usr/share/luajit-2.1/lazy.lua'
+	no file '/usr/local/share/lua/5.1/lazy.lua'
+	no file '/usr/local/share/lua/5.1/lazy/init.lua'
+	no file '/tmp/neovim/.deps/usr/share/lua/5.1/lazy.lua'
+	no file '/tmp/neovim/.deps/usr/share/lua/5.1/lazy/init.lua'
+	no file './lazy.so'
+	no file '/usr/local/lib/lua/5.1/lazy.so'
+	no file '/tmp/neovim/.deps/usr/lib/lua/5.1/lazy.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+stack traceback:
+	[C]: in function 'require'
+	./lua/plugin_managers/lazy.lua:38: in function 'setup'
+	/home/neovim/.config/nvim/init.lua:4: in main chunk
+DBG 2025-08-18T05:22:47.737 nvim.7.0   UI: default_colors_set
+DBG 2025-08-18T05:22:47.743 nvim.7.0   UI: raw_line
+INF 2025-08-18T05:22:48.007 nvim.7.0   main:648: starting main loop
+DBG 2025-08-18T05:22:48.020 nvim.7.0   UI: raw_line (+1 times...)
+DBG 2025-08-18T05:22:48.023 nvim.7.0   UI: grid_scroll
+DBG 2025-08-18T05:22:48.034 nvim.7.0   UI: raw_line
+DBG 2025-08-18T05:22:48.052 nvim.7.0   UI: raw_line (+18 times...)
+DBG 2025-08-18T05:22:48.053 ui.1       receive_msgpack:210: ch 3: parsing 1710 bytes from msgpack Stream: 0x7ff226ff2208
+DBG 2025-08-18T05:22:48.054 nvim.7.0   UI: grid_cursor_goto
+DBG 2025-08-18T05:22:48.058 nvim.7.0   UI: mode_info_set
+DBG 2025-08-18T05:22:48.060 nvim.7.0   UI: mode_change
+DBG 2025-08-18T05:22:48.068 nvim.7.0   UI: mouse_off
+DBG 2025-08-18T05:22:48.083 nvim.7.0   UI: flush
+DBG 2025-08-18T05:22:48.084 ui.1       receive_msgpack:210: ch 3: parsing 3303 bytes from msgpack Stream: 0x7ff226ff2208
+DBG 2025-08-18T05:22:48.091 nvim.7.0   inbuf_poll:516: blocking... events=false
+DBG 2025-08-18T05:22:52.115 nvim.7.0   inbuf_poll:516: blocking... events=false
+INF 2025-08-18T05:22:52.815 ?.9        os_exit:684: Nvim exit: 0
+DBG 2025-08-18T05:23:00.307 ?.15       vim_mktempdir:3282: $TMPDIR is unset
+INF 2025-08-18T05:23:00.316 nvim.15.0  set_init_2:597: startup runtimepath/packpath value: /home/neovim/.config/nvim,/etc/xdg/nvim,/home/neovim/.local/share/nvim/site,/usr/local/share/nvim/site,/usr/share/nvim/site,/usr/local/share/nvim/runtime,/usr/local/lib/nvim,/usr/share/nvim/site/after,/usr/local/share/nvim/site/after,/home/neovim/.local/share/nvim/site/after,/etc/xdg/nvim/after,/home/neovim/.config/nvim/after
+DBG 2025-08-18T05:23:00.367 nvim.15.0  proc_spawn:130: new: pid=21 exepath=[/usr/bin/git]
+DBG 2025-08-18T05:23:00.377 nvim.15.0  read_cb:121: closing Stream (0x7fffb78ffd80): EOF (end of file)
+DBG 2025-08-18T05:23:00.380 nvim.15.0  read_cb:121: closing Stream (0x7fffb78ffbc8): EOF (end of file)
+INF 2025-08-18T05:23:00.389 nvim.15.0  on_proc_exit:439: child exited: pid=21 status=128lu
+DBG 2025-08-18T05:23:00.405 nvim.15.0  stream_may_close:107: closing Stream: 0x7fffb78ffbc8
+DBG 2025-08-18T05:23:00.422 nvim.15.0  stream_may_close:107: closing Stream: 0x7fffb78ffd80
+INF 2025-08-18T05:23:00.587 nvim.15.0  emsg_multiline:759: E5113: Error while calling lua chunk: ./lua/plugin_managers/lazy.lua:38: module 'lazy' not found:
+	no field package.preload['lazy']
+	no file './lazy.lua'
+	no file '/tmp/neovim/.deps/usr/share/luajit-2.1/lazy.lua'
+	no file '/usr/local/share/lua/5.1/lazy.lua'
+	no file '/usr/local/share/lua/5.1/lazy/init.lua'
+	no file '/tmp/neovim/.deps/usr/share/lua/5.1/lazy.lua'
+	no file '/tmp/neovim/.deps/usr/share/lua/5.1/lazy/init.lua'
+	no file './lazy.so'
+	no file '/usr/local/lib/lua/5.1/lazy.so'
+	no file '/tmp/neovim/.deps/usr/lib/lua/5.1/lazy.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+stack traceback:
+	[C]: in function 'require'
+	./lua/plugin_managers/lazy.lua:38: in function 'setup'
+	/home/neovim/.config/nvim/init.lua:4: in main chunk
+INF 2025-08-18T05:23:00.786 nvim.15.0  emsg_multiline:759: E886: Failed to create directory /home/neovim/.local/state for writing ShaDa file: permission denied
+INF 2025-08-18T05:23:00.815 nvim.15.0  os_exit:684: Nvim exit: 0
+INF 2025-08-18T05:23:15.694 ui.1       deadly_signal:181: got signal 15 (SIGTERM)
+DBG 2025-08-18T05:23:16.711 ui.1       stream_may_close:107: closing Stream: 0x7ff226f83278
+ERR 2025-08-18T05:23:16.762 ui.1       tui_stop:615: TUI already stopped (race?)
+DBG 2025-08-18T05:23:16.771 ui.1       stream_may_close:107: closing Stream: 0x7ff226ff2090
+DBG 2025-08-18T05:23:16.780 nvim.7.0   read_cb:121: closing Stream (0x7f62efec7040): EOF (end of file)
+DBG 2025-08-18T05:23:16.781 ui.1       stream_may_close:107: closing Stream: 0x7ff226ff2208
+DBG 2025-08-18T05:23:16.787 nvim.7.0   receive_msgpack:210: ch 1: parsing 0 bytes from msgpack Stream: 0x7f62efec7040
+INF 2025-08-18T05:23:16.794 ui.1       os_exit:684: Nvim exit: 1
+DBG 2025-08-18T05:23:16.798 nvim.7.0   stream_may_close:107: closing Stream: 0x7f62efec7040
