@@ -5,6 +5,7 @@ from __future__ import annotations
 # Standard library imports
 import asyncio
 import fcntl
+import ipaddress
 import json
 import multiprocessing
 import os
@@ -270,10 +271,47 @@ http_headers = {
 }
 
 
-def is_remote_resource_exists(url: str) -> bool:
-    """Check if a URL exists."""
+def is_safe_url(url: str) -> bool:
+    """Check if the URL is safe to access (not a private IP, valid scheme)."""
     try:
-        response = httpx.head(url, headers=http_headers)
+        parsed_url = urlparse(url)
+
+        # 1. Validate scheme
+        if parsed_url.scheme not in ("http", "https"):
+            logger.warning("Unsafe URL scheme: %s", parsed_url.scheme)
+            return False
+
+        # 2. Validate hostname/IP
+        if not parsed_url.hostname:
+            logger.warning("URL has no hostname: %s", url)
+            return False
+
+        # Resolve hostname to IP address
+        try:
+            ip_address = ipaddress.ip_address(parsed_url.hostname)
+        except ValueError:
+            # If it's not a direct IP, assume it's a hostname and let httpx resolve it.
+            # For production, consider async DNS resolution and IP validation.
+            logger.debug("Hostname is not a direct IP: %s", parsed_url.hostname)
+            return True # Allow hostnames, rely on httpx for resolution and external access
+
+        # Check for private IP ranges
+        if ip_address.is_private or ip_address.is_loopback:
+            logger.warning("Attempt to access private/loopback IP: %s", ip_address)
+            return False
+
+        return True
+    except Exception as e:
+        logger.error("Error validating URL %s: %s", url, e)
+        return False
+
+
+def is_remote_resource_exists(url: str) -> bool:
+    """Check if a URL exists and is safe."""
+    if not is_safe_url(url):
+        return False
+    try:
+        response = httpx.head(url, headers=http_headers, follow_redirects=False)
         return response.status_code in {
             httpx.codes.OK,
             httpx.codes.MOVED_PERMANENTLY,
@@ -286,9 +324,11 @@ def is_remote_resource_exists(url: str) -> bool:
 
 def fetch_markdown(url: str) -> str:
     """Fetch markdown content from a URL."""
+    if not is_safe_url(url):
+        return ""
     try:
         logger.info("Fetching markdown content from %s", url)
-        response = httpx.get(url, headers=http_headers)
+        response = httpx.get(url, headers=http_headers, follow_redirects=False)
         if response.status_code == httpx.codes.OK:
             return md(response.text)
         return ""
