@@ -1092,6 +1092,17 @@ async def add_resource(request: ResourceRequest, background_tasks: BackgroundTas
 
     if is_local_uri(request.uri):
         directory = uri_to_path(request.uri)
+        # Validate directory is within BASE_DATA_DIR
+        try:
+            resolved_directory = directory.resolve()
+            resolved_base = BASE_DATA_DIR.resolve()
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Invalid directory path") from e
+        if not str(resolved_directory).startswith(str(resolved_base)):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Access to directory outside base data directory is not allowed: {resolved_directory}",
+            )
         if not directory.exists():
             raise HTTPException(status_code=404, detail=f"Directory not found: {directory}")
 
