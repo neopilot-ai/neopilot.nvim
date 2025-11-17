@@ -1,4 +1,4 @@
-name: Security Headers Check
+name: "Security Headers Check"
 
 on:
   push:
@@ -20,7 +20,6 @@ jobs:
           - 3000:3000
         volumes:
           - .:/app
-        working-directory: /app
         # Start a simple HTTP server for testing (replace with your actual start command)
         options: >-
           --health-cmd "wget --quiet --tries=1 --spider http://localhost:3000/health || exit 1"
