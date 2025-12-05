@@ -47,7 +47,7 @@ function M.setup()
   git_clone_plugin({
     branch = vim.env.NEOPILOT_VIM_BRANCH or 'master',
     destination = 'site/pack/neopilot/start/neopilot.vim',
-    source = 'https://github.com/neopilot-ai/neopilot.nvimgit',
+    source = 'https://github.com/neopilot-ai/neopilot.nvim.git',
   })
 
   require('neopilot').setup({})
