@@ -1,4 +1,4 @@
-local notifier = require('neopilt.notifier')
+local notifier = require('neopilot.notifier')
 
 local M = {}
 
@@ -45,14 +45,14 @@ function M.setup()
   end
 
   git_clone_plugin({
-    branch = vim.env.NEOPILOT_VIM_BRANCH or 'main',
-    destination = 'site/pack/neopilt/start/neopilot.nvim',
-    source = 'https://github.com/neopilt-ai/neopilot.nvim.git',
+    branch = vim.env.NEOPILOT_VIM_BRANCH or 'master',
+    destination = 'site/pack/neopilot/start/neopilot.vim',
+    source = 'https://github.com/neopilot-ai/neopilot.nvim.git',
   })
 
-  require('neopilt').setup({})
+  require('neopilot').setup({})
 
-  if vim.env.LSP_INSTALLER == 'neopilot.nvim' then
+  if vim.env.LSP_INSTALLER == 'neopilot.vim' then
     vim.cmd.NeoPilotCodeSuggestionsInstallLanguageServer()
   end
 end
